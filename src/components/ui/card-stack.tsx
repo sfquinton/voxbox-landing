@@ -319,20 +319,17 @@ function DefaultFanCard({
   const videoRef = React.useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = React.useState(false);
   const [showOverlay, setShowOverlay] = React.useState(true);
-  const [userUnmuted, setUserUnmuted] = React.useState(false);
-
   React.useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
     if (active) {
       vid.currentTime = 0;
+      vid.muted = muted;
       vid.play().catch(() => {});
       setPaused(false);
-      setShowOverlay(true);
-      setUserUnmuted(false);
+      setShowOverlay(muted);
     } else {
       vid.muted = true;
-      setUserUnmuted(false);
       setPaused(false);
       setShowOverlay(true);
       vid.play().catch(() => {});
@@ -342,12 +339,8 @@ function DefaultFanCard({
   React.useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
-    if (active && userUnmuted) {
-      vid.muted = muted;
-    } else {
-      vid.muted = true;
-    }
-  }, [muted, active, userUnmuted]);
+    vid.muted = active ? muted : true;
+  }, [muted, active]);
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -356,7 +349,6 @@ function DefaultFanCard({
 
     if (muted) {
       onToggleMute();
-      setUserUnmuted(true);
       setShowOverlay(false);
       return;
     }
@@ -423,6 +415,7 @@ function DefaultFanCard({
       {active && item.videoSrc && showOverlay && (
         <button
           onClick={handleOverlayClick}
+          onPointerDown={(e) => e.stopPropagation()}
           className="absolute inset-0 z-20 flex items-center justify-center"
         >
           <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/30 bg-black/50 text-white backdrop-blur-md transition hover:scale-110 hover:bg-black/70">
@@ -434,6 +427,7 @@ function DefaultFanCard({
       {active && item.videoSrc && !showOverlay && (
         <button
           onClick={handleVideoAreaClick}
+          onPointerDown={(e) => e.stopPropagation()}
           className="absolute inset-0 z-20"
         />
       )}
