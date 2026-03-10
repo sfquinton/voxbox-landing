@@ -320,7 +320,6 @@ function DefaultFanCard({
   const [paused, setPaused] = React.useState(false);
   const [showOverlay, setShowOverlay] = React.useState(true);
 
-  // When this card becomes active, start playing. When inactive, stop.
   React.useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
@@ -335,6 +334,13 @@ function DefaultFanCard({
       setShowOverlay(true);
     }
   }, [active]);
+
+  // Load first frame on mount so background cards show a preview
+  React.useEffect(() => {
+    const vid = videoRef.current;
+    if (!vid || active) return;
+    vid.currentTime = 0.1;
+  }, []);
 
   React.useEffect(() => {
     if (!videoRef.current) return;
@@ -393,7 +399,7 @@ function DefaultFanCard({
             muted={muted}
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
           />
         ) : item.imageSrc ? (
           <img
