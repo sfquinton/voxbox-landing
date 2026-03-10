@@ -27,7 +27,7 @@ export default function MetaPixel() {
       } else {
         fbq.queue.push(args);
       }
-    } as Window["fbq"];
+    } as unknown as Window["fbq"];
     fbq.queue = [];
     fbq.loaded = true;
     fbq.version = "2.0";
