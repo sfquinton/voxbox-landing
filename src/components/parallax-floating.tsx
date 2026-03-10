@@ -42,6 +42,10 @@ const Floating = ({
         element: HTMLDivElement;
         depth: number;
         currentPosition: { x: number; y: number };
+        phaseX: number;
+        phaseY: number;
+        speedX: number;
+        speedY: number;
       }
     >()
   );
@@ -53,6 +57,10 @@ const Floating = ({
         element,
         depth,
         currentPosition: { x: 0, y: 0 },
+        phaseX: Math.random() * Math.PI * 2,
+        phaseY: Math.random() * Math.PI * 2,
+        speedX: 0.3 + Math.random() * 0.4,
+        speedY: 0.3 + Math.random() * 0.4,
       });
     },
     []
@@ -62,14 +70,23 @@ const Floating = ({
     elementsMap.current.delete(id);
   }, []);
 
-  useAnimationFrame(() => {
+  const timeRef = useRef(0);
+
+  useAnimationFrame((_t, delta) => {
     if (!containerRef.current) return;
+
+    timeRef.current += delta / 1000;
+    const t = timeRef.current;
 
     elementsMap.current.forEach((data) => {
       const strength = (data.depth * sensitivity) / 20;
+      const driftRadius = 6 + data.depth * 3;
 
-      const newTargetX = mousePositionRef.current.x * strength;
-      const newTargetY = mousePositionRef.current.y * strength;
+      const driftX = Math.sin(t * data.speedX + data.phaseX) * driftRadius;
+      const driftY = Math.cos(t * data.speedY + data.phaseY) * driftRadius;
+
+      const newTargetX = mousePositionRef.current.x * strength + driftX;
+      const newTargetY = mousePositionRef.current.y * strength + driftY;
 
       const dx = newTargetX - data.currentPosition.x;
       const dy = newTargetY - data.currentPosition.y;

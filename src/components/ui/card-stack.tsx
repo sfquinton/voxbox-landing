@@ -319,6 +319,7 @@ function DefaultFanCard({
   const videoRef = React.useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = React.useState(false);
   const [showOverlay, setShowOverlay] = React.useState(true);
+  const [userUnmuted, setUserUnmuted] = React.useState(false);
 
   React.useEffect(() => {
     const vid = videoRef.current;
@@ -328,24 +329,25 @@ function DefaultFanCard({
       vid.play().catch(() => {});
       setPaused(false);
       setShowOverlay(true);
+      setUserUnmuted(false);
     } else {
-      vid.pause();
-      setPaused(true);
+      vid.muted = true;
+      setUserUnmuted(false);
+      setPaused(false);
       setShowOverlay(true);
+      vid.play().catch(() => {});
     }
   }, [active]);
 
-  // Load first frame on mount so background cards show a preview
   React.useEffect(() => {
     const vid = videoRef.current;
-    if (!vid || active) return;
-    vid.currentTime = 0.1;
-  }, []);
-
-  React.useEffect(() => {
-    if (!videoRef.current) return;
-    videoRef.current.muted = muted;
-  }, [muted]);
+    if (!vid) return;
+    if (active && userUnmuted) {
+      vid.muted = muted;
+    } else {
+      vid.muted = true;
+    }
+  }, [muted, active, userUnmuted]);
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -353,8 +355,8 @@ function DefaultFanCard({
     if (!vid) return;
 
     if (muted) {
-      // First click: unmute and hide overlay
       onToggleMute();
+      setUserUnmuted(true);
       setShowOverlay(false);
       return;
     }
@@ -396,10 +398,10 @@ function DefaultFanCard({
             src={item.videoSrc}
             className="h-full w-full object-cover"
             draggable={false}
-            muted={muted}
+            muted
+            autoPlay
             loop
             playsInline
-            preload="auto"
           />
         ) : item.imageSrc ? (
           <img
