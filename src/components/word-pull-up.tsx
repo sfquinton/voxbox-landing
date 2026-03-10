@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import { motion, Variants, useInView } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -48,12 +48,11 @@ export function WordPullUp({
   wordClassName,
   delay = 0,
   as: Tag = "p",
-  startOnView = false,
+  startOnView = true,
 }: WordPullUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
-
-  const MotionTag = motion.create(Tag);
+  const MotionTag = useMemo(() => motion.create(Tag), [Tag]);
   const words = children.split(/(\s+)/);
 
   const shouldAnimate = startOnView ? inView : true;

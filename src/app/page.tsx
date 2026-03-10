@@ -323,6 +323,7 @@ export default function Home() {
               <WordPullUp
                 as="h1"
                 delay={0.6}
+                startOnView={false}
                 className="text-[11vw] md:text-[8vw] font-bold tracking-tighter leading-none text-white flex-nowrap"
               >
                 Vocal Presets
@@ -332,6 +333,7 @@ export default function Home() {
             <WordPullUp
               as="p"
               delay={1.0}
+              startOnView={false}
               className="text-[4.5vw] md:text-[2.2vw] text-white/60 mt-3 md:mt-5 font-medium tracking-wide"
               wordClassName="[&:nth-child(3)]:text-white [&:nth-child(3)]:uppercase [&:nth-child(3)]:font-black"
             >
@@ -512,9 +514,6 @@ export default function Home() {
           <CardStack
             items={videoCards}
             initialIndex={0}
-            autoAdvance
-            intervalMs={6000}
-            pauseOnHover
             showDots
             cardWidth={isMobile ? 180 : 300}
             cardHeight={isMobile ? 320 : 534}
@@ -560,10 +559,10 @@ export default function Home() {
           </p>
         </div>
         <VideoCompare
-          beforeSrc="/videos/esdee-before.mp4"
-          afterSrc="/videos/yeat-before.mp4"
-          beforeLabel="Raw"
-          afterLabel="Preset"
+          beforeSrc="/videos/preset-off.mp4"
+          afterSrc="/videos/preset-on.mp4"
+          beforeLabel="Preset Off"
+          afterLabel="Preset On"
         />
         <div className="flex justify-center mt-6 md:mt-10">
           <a href="https://thevoxbox.shop/collections/all" target="_blank" rel="noopener noreferrer">
