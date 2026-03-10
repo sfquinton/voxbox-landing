@@ -325,6 +325,7 @@ export default function Home() {
                 delay={0.6}
                 startOnView={false}
                 className="text-[11vw] md:text-[8vw] font-bold tracking-tighter leading-none text-white flex-nowrap"
+                wordClassName="bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent"
               >
                 Vocal Presets
               </WordPullUp>
@@ -477,16 +478,59 @@ export default function Home() {
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-[25vh] z-40 bg-gradient-to-b from-transparent to-[#050505]" />
       </div>
 
-      {/* Video showcase section */}
+      {/* Before / After section */}
       <section className="relative pt-4 md:pt-2 pb-10 md:pb-24 px-4">
+        <div className="mx-auto max-w-2xl text-center mb-4 md:mb-12">
+          <WordPullUp
+            as="h2"
+            delay={0.1}
+            className="text-[7vw] md:text-[4vw] font-bold tracking-tighter leading-none text-white flex-nowrap"
+            wordClassName="bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent"
+          >
+            Hear the Difference
+          </WordPullUp>
+          <p className="text-[3.5vw] md:text-[1.2vw] text-white/40 mt-2 md:mt-4 font-medium tracking-wide">
+            Drag the slider to compare
+          </p>
+        </div>
+        <VideoCompare
+          beforeSrc="/videos/preset-off.mp4"
+          afterSrc="/videos/preset-on.mp4"
+          beforeLabel="Preset Off"
+          afterLabel="Preset On"
+        />
+        <div className="flex justify-center mt-6 md:mt-10">
+          <a href="https://thevoxbox.shop/collections/all" target="_blank" rel="noopener noreferrer">
+            <InteractiveHoverButton className="px-10 py-4 text-lg">
+              Download Now
+            </InteractiveHoverButton>
+          </a>
+        </div>
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          className="flex flex-col items-center gap-0.5 mt-4 md:mt-6"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white/30">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white/20 -mt-1.5">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </motion.div>
+      </section>
+
+      {/* Video showcase section */}
+      <section className="relative pt-4 md:pt-16 pb-10 md:pb-24 px-4">
         <div className="mx-auto max-w-5xl text-center -mb-4 md:-mb-6">
           <div className="relative inline-block">
             <WordPullUp
               as="h2"
               delay={0.1}
               className="text-[7vw] md:text-[4vw] font-bold tracking-tighter leading-none text-white flex-nowrap"
+              wordClassName="bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent"
             >
-              Hear the Presets
+              Hear more Presets
             </WordPullUp>
             <div className="pointer-events-none absolute inset-0 hidden md:block bg-gradient-to-b from-transparent via-transparent to-[#050505]/70" />
           </div>
@@ -544,47 +588,6 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* Before / After section */}
-      <section className="relative pt-4 md:pt-16 pb-10 md:pb-24 px-4">
-        <div className="mx-auto max-w-2xl text-center mb-4 md:mb-12">
-          <WordPullUp
-            as="h2"
-            delay={0.1}
-            className="text-[7vw] md:text-[4vw] font-bold tracking-tighter leading-none text-white flex-nowrap"
-          >
-            Hear the Difference
-          </WordPullUp>
-          <p className="text-[3.5vw] md:text-[1.2vw] text-white/40 mt-2 md:mt-4 font-medium tracking-wide">
-            Drag the slider to compare before &amp; after
-          </p>
-        </div>
-        <VideoCompare
-          beforeSrc="/videos/preset-off.mp4"
-          afterSrc="/videos/preset-on.mp4"
-          beforeLabel="Preset Off"
-          afterLabel="Preset On"
-        />
-        <div className="flex justify-center mt-6 md:mt-10">
-          <a href="https://thevoxbox.shop/collections/all" target="_blank" rel="noopener noreferrer">
-            <InteractiveHoverButton className="px-10 py-4 text-lg">
-              Download Now
-            </InteractiveHoverButton>
-          </a>
-        </div>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-0.5 mt-4 md:mt-6"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white/30">
-            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white/20 -mt-1.5">
-            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </motion.div>
-      </section>
-
       {/* Preset library section */}
       <section className="relative pt-4 md:pt-16 pb-10 md:pb-24 px-4">
         <div className="mx-auto max-w-2xl text-center mb-4 md:mb-12">
@@ -592,6 +595,7 @@ export default function Home() {
             as="h2"
             delay={0.1}
             className="text-[7vw] md:text-[4vw] font-bold tracking-tighter leading-none text-white flex-nowrap"
+            wordClassName="bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent"
           >
             Browse the Library
           </WordPullUp>
@@ -639,6 +643,7 @@ export default function Home() {
             as="h2"
             delay={0.1}
             className="text-[7vw] md:text-[4vw] font-bold tracking-tighter leading-none text-white flex-nowrap"
+            wordClassName="bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent"
           >
             Frequently Asked Questions
           </WordPullUp>

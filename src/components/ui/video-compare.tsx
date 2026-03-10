@@ -22,17 +22,24 @@ export function VideoCompare({
   const beforeRef = useRef<HTMLVideoElement>(null);
   const afterRef = useRef<HTMLVideoElement>(null);
   const [sliderPos, setSliderPos] = useState(50);
+  const sliderRef = useRef(50);
   const draggingRef = useRef(false);
   const [, forceRender] = useState(0);
   const [playing, setPlaying] = useState(false);
   const hasStartedRef = useRef(false);
-  const [ready, setReady] = useState(false);
-  const readyCount = useRef(0);
 
   const updateAudio = useCallback((pos: number) => {
-    const t = pos / 100;
-    if (beforeRef.current) beforeRef.current.volume = Math.max(0, Math.min(1, t));
-    if (afterRef.current) afterRef.current.volume = Math.max(0, Math.min(1, 1 - t));
+    const before = beforeRef.current;
+    const after = afterRef.current;
+    if (!before || !after) return;
+
+    if (pos < 50) {
+      before.muted = true;
+      after.muted = false;
+    } else {
+      before.muted = false;
+      after.muted = true;
+    }
   }, []);
 
   const syncVideos = useCallback(() => {
@@ -52,13 +59,11 @@ export function VideoCompare({
 
     hasStartedRef.current = true;
     setPlaying(true);
-    before.muted = false;
-    after.muted = false;
     syncVideos();
-    updateAudio(sliderPos);
+    updateAudio(sliderRef.current);
     before.play().catch(() => {});
     after.play().catch(() => {});
-  }, [sliderPos, syncVideos, updateAudio]);
+  }, [syncVideos, updateAudio]);
 
   const stopPlayback = useCallback(() => {
     const before = beforeRef.current;
@@ -69,6 +74,8 @@ export function VideoCompare({
     after.pause();
     before.currentTime = 0;
     after.currentTime = 0;
+    before.muted = true;
+    after.muted = true;
     hasStartedRef.current = false;
     setPlaying(false);
   }, []);
@@ -80,8 +87,11 @@ export function VideoCompare({
       const rect = container.getBoundingClientRect();
       const pct = ((clientX - rect.left) / rect.width) * 100;
       const clamped = Math.max(2, Math.min(98, pct));
+      sliderRef.current = clamped;
       setSliderPos(clamped);
-      updateAudio(clamped);
+      if (hasStartedRef.current) {
+        updateAudio(clamped);
+      }
     },
     [updateAudio]
   );
@@ -125,11 +135,6 @@ export function VideoCompare({
     };
   }, [handleMove, startPlayback]);
 
-  const onVideoReady = useCallback(() => {
-    readyCount.current += 1;
-    if (readyCount.current >= 2) setReady(true);
-  }, []);
-
   useEffect(() => {
     const before = beforeRef.current;
     const after = afterRef.current;
@@ -140,6 +145,8 @@ export function VideoCompare({
       setPlaying(false);
       before.currentTime = 0;
       after.currentTime = 0;
+      before.muted = true;
+      after.muted = true;
     };
     before.addEventListener("ended", onEnded);
     return () => before.removeEventListener("ended", onEnded);
@@ -164,9 +171,10 @@ export function VideoCompare({
           src={afterSrc}
           className="absolute inset-0 w-full h-full object-cover"
           muted
+          autoPlay
+          loop
           playsInline
           preload="auto"
-          onCanPlay={onVideoReady}
         />
 
         {/* Before video — clipped to slider position */}
@@ -176,9 +184,10 @@ export function VideoCompare({
           className="absolute inset-0 w-full h-full object-cover"
           style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
           muted
+          autoPlay
+          loop
           playsInline
           preload="auto"
-          onCanPlay={onVideoReady}
         />
 
         {/* Slider handle */}

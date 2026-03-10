@@ -187,6 +187,7 @@ export function CardStack<T extends CardStackItem>({
                 ? {
                     drag: "x" as const,
                     dragConstraints: { left: 0, right: 0 },
+                    dragSnapToOrigin: true,
                     dragElastic: 0.18,
                     onDragEnd: (
                       _e: unknown,
@@ -243,7 +244,7 @@ export function CardStack<T extends CardStackItem>({
                     stiffness: springStiffness,
                     damping: springDamping,
                   }}
-                  onClick={() => setActive(i)}
+                  onClick={() => { if (!isActive) setActive(i); }}
                   {...dragProps}
                 >
                   <div
