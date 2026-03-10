@@ -4,25 +4,45 @@ import { useEffect } from "react";
 
 const META_PIXEL_ID = "232948958848613";
 
+declare global {
+  interface Window {
+    fbq: CallableFunction & {
+      callMethod?: CallableFunction;
+      queue: unknown[];
+      loaded: boolean;
+      version: string;
+      push: CallableFunction;
+    };
+    _fbq: typeof window.fbq;
+  }
+}
+
 export default function MetaPixel() {
   useEffect(() => {
-    if (document.getElementById("fb-pixel-script")) return;
+    if (window.fbq && window.fbq.loaded) return;
+
+    const fbq = function (...args: unknown[]) {
+      if (fbq.callMethod) {
+        fbq.callMethod(...args);
+      } else {
+        fbq.queue.push(args);
+      }
+    } as Window["fbq"];
+    fbq.queue = [];
+    fbq.loaded = true;
+    fbq.version = "2.0";
+    fbq.push = fbq;
+
+    window.fbq = fbq;
+    window._fbq = fbq;
 
     const script = document.createElement("script");
-    script.id = "fb-pixel-script";
-    script.innerHTML = `
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '${META_PIXEL_ID}');
-      fbq('track', 'PageView');
-    `;
+    script.async = true;
+    script.src = "https://connect.facebook.net/en_US/fbevents.js";
     document.head.appendChild(script);
+
+    window.fbq("init", META_PIXEL_ID);
+    window.fbq("track", "PageView");
   }, []);
 
   return (
