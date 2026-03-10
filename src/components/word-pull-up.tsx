@@ -1,7 +1,7 @@
 "use client";
 
+import React, { useRef } from "react";
 import { motion, Variants, useInView } from "motion/react";
-import { useRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface WordPullUpProps {
@@ -50,7 +50,7 @@ export function WordPullUp({
   as: Tag = "p",
   startOnView = false,
 }: WordPullUpProps) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
 
   const MotionTag = motion.create(Tag);
@@ -60,7 +60,7 @@ export function WordPullUp({
 
   return (
     <MotionTag
-      ref={ref}
+      ref={ref as React.RefObject<never>}
       variants={containerVariants}
       initial="hidden"
       animate={shouldAnimate ? "show" : "hidden"}
