@@ -14,8 +14,28 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VP Landing Page",
-  description: "A modern landing page with parallax floating hero",
+  title: "TheVoxBox",
+  description: "Vocal presets that actually work. Used by 16,000+ artists with 100M+ streams generated.",
+  openGraph: {
+    title: "TheVoxBox",
+    description: "Vocal presets that actually work. Used by 16,000+ artists with 100M+ streams generated.",
+    url: "https://thevoxbox.xyz",
+    siteName: "TheVoxBox",
+    type: "website",
+    images: [
+      {
+        url: "https://thevoxbox.xyz/og-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TheVoxBox",
+    description: "Vocal presets that actually work. Used by 16,000+ artists with 100M+ streams generated.",
+    images: ["https://thevoxbox.xyz/og-image.png"],
+  },
 };
 
 export default function RootLayout({
